@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Campaign Creation</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+	<!--jQuery, linked from a CDN-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+	<script src="public/JS/campaignCreation.js" defer></script>
+	<script src="public/JS/toastHandler.js" defer></script>
+	<script src="public/JS/detailAcquisition.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+	<!-- Includes the Google Platform Library -->
+	<script src="https://apis.google.com/js/platform.js" async defer></script>
+	<!-- Script for responsive location input. -->
+	<script src="https://cdn.jsdelivr.net/npm/places.js@1.16.4"></script>
+	<!-- Script for google maps API -->
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuKJ8i0C9UUlj65WvVLkxd3SjNI6lh004&libraries=places"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="public/CSS/main.css">
+	<link rel="stylesheet" href="public/CSS/rightArrowCTA.css">
+	<link rel="stylesheet" href="public/CSS/leftArrowCTA.css">
+	<link rel="stylesheet" href="public/CSS/GS-CTA.css">
+	<link rel="stylesheet" href="public/CSS/campaignCreation.css">
+	<link rel="stylesheet" href="public/CSS/googleMaps.css">
+
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-light bg-dark" id="header" style = "display-inline:block" >
+		<div class = "container-fluid">
+			<a class="navbar-brand" id = 'logo' href="#"><img src="public/Image%20Components/logo.png" alt = "Logo" style = "width:75px; height: 55px;"></a>
+			<div class="navbar-header">
+				<button type=button class="navbar-toggle" data-toggle=collapse data-target=#myNavbar>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<div class="subnav" id="sBusiness">
+					<a href="/business/dashboard" class="subnavbtn selectedItem-main">Business</a>
+					<div class="subnav-content">
+						<a href="/business/whyinfluencerads">Why InfluencerAds?</a>
+						<a href="/business/howitworks">How It Works?</a>
+						<a href="/business/pricing">Pricing</a>
+						<a href="/business/marketresearch">Market Research</a>
+						<a href="/business/faq">FAQ</a>
+						<div>
+							<a href="/business/signup" class="btn btn-sm animated-button swipe">Get Started!</a>
+						</div>
+					</div>
+				</div>
+				<div class="subnav" id="sInfluence">
+					<a href="/influencer/whysway" class="subnavbtn">Influencer</a>
+					<div class="subnav-content">
+						<a href="/influencer/whysway">Why Sway?</a>
+						<a href="/influencer/howitworks">How It Works?</a>
+						<a href="/influencer/howmuchcaniearn">How Much Can I Earn?</a>
+						<a href="/influencer/faq">FAQ</a>
+						<div>
+							<a href="/influencer/signup" class="btn btn-sm animated-button swipe">Get Started!</a>
+						</div>
+					</div>
+				</div>
+				<ul class="nav navbar-nav navbar-right" id = 'loggedin'>
+					<li id = 'login_button' style = "display:none;"><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+					<li id = 'avatar' style="display:block;">
+						<div class = 'dropdown'>
+							<button class = 'dropbtn'>
+								<img src="public/Image%20Components/Hulk%20Hogan.jpg" class="avatar1" id = 'avatarimg'>
+							</button>
+							<div class="dropdown-content">
+								<a href="#">Profile</a>
+								<a href="#">Settings</a>
+								<a href="#">Support</a>
+							</div>
+						</div>
+					</li>
+				</ul>
+				<ul class="active" id="mobilemenu">
+					<div>
+						<a class="selectedItem-main" href="/business/whyinfluencerads" id="navMain">
+							Business
+						</a>
+					</div>
+					<div>
+						<ul class="subnav" id="businessSubmenu">
+							<li>
+								<a href="/business/whyinfluencerads">Why InfluencerAds?</a>
+							</li>
+							<li>
+								<a href="/business/howitworks">How It Works?</a>
+							</li>
+							<li>
+								<a href="/business/pricing">Pricing</a>
+							</li>
+							<li>
+								<a href="/business/marketresearch">Market Research</a>
+							</li>
+							<li>
+								<a href="/business/faq">FAQ</a>
+							</li>
+							<li>
+								<a class="mobileGS" href="/business/signup">GET STARTED</a>
+							</li>
+						</ul>
+					</div>
+					<div>
+						<a href="/influencer/home" id="navMain">
+							Influencer
+						</a>
+					</div>
+					<div>
+						<ul class="subnav" id="influencerSubmenu">
+							<li>
+								<a href="/influencer/whysway">Why Sway?</a>
+							</li>
+							<li>
+								<a href="/influencer/howitworks">How It Works?</a>
+							</li>
+							<li>
+								<a href="/influencer/howmuchcaniearn">How Much Can I Earn?</a>
+							</li>
+							<li>
+								<a href="/influencer/faq">FAQ</a>
+							</li>
+							<li>
+								<a class="mobileGS" href="/influencer/signup">GET STARTED</a>
+							</li>
+						</ul>
+					</div>
+					<div>
+						<a href="/login" id="navMain">
+							Login
+							<span class="glyphicon glyphicon-log-in"></span>
+						</a>
+					</div>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container-fluid">
+		<div class="row">
+			<h3 class="bodyHeader"> Create Campaign </h3>
+			<p class="bodyHeaderCaption" id="headerCaption"> What are you trying to achieve? </p>
+		</div>
+		<div class="progress row">
+			<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width:33%">
+				Step 1 of 3
+			</div>
+		</div>
+
+
+		<div id="s1Content">
+			<div class="row">
+				<form id="cnForm">
+					<label> Campaign Name: <span class="required">*</span></label>
+					<br class="breaks"><input id="campaignName" type="text" placeholder="">
+				</form>
+			</div>
+			<div class="row">
+				<label id="caption"> Select a goal that would make this campaign successful to you? <span class="required">*</span></label>
+			</div>
+			<div class="row">
+				<div id="campaignGoals">
+					<div class ="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+						<button id="BAR" type="button" class="block" value="BAR" onclick="barOn()"><i class="fas fa-bullhorn"></i><br>Brand Awareness and Reach</button>
+					</div>
+					<div class ="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+						<button id="ENG" type="button" class="block" value="ENG" onclick="engOn()"><i class="fas fa-eye"></i></i><br>Engagement</button>
+					</div>
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+						<button id="CAS" type="button" class="block" value="CAS" onclick="casOn()"><i class="fas fa-tags"></i></i><br>Clicks and Sales</button>
+					</div>
+				</div>
+			</div>
+			<div class="row inline col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin: 0px">
+				<button id="s1next" type="button" class="button-animate right" style="vertical-align:middle" onclick="submitStep1()"><span>Next </span></button>
+			</div>
+		</div>
+
+
+		<div id="s2Content">
+			<fieldset>
+				<legend>Budget</legend>
+				<div class="row">
+					<div id="budgetColumn" class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+						<label>Enter the average you want to spend each day: <span class="required">*</span></label>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<select id="currency" name="Currency">
+									<option value="GBP"> £ </option>
+									<option value="EUR"> ‎€ </option>
+								</select>
+							</span>
+
+							<input id="budgetInt" class="form-control" type="text"  required/>
+							<label>.</label>
+							<input id="budgetDec" class="form-control" type="number" max="99" maxlength="2" min="0" value="00" required>
+						</div>
+					</div>
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" id="info">
+						<p> For the month, you won't spend more than your daily budget multiplied by the number of days. </p>
+						<p> Some days you will spend less than the daily budget, some days you will spend up to twice as much. </p>
+					</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="infoCompact">
+						<p> For the month, you won't spend more than your daily budget multiplied by the number of days. Some days you will spend less than the daily budget, some days you will spend up to twice as much. </p>
+					</div>
+				</fieldset>
+
+				<fieldset>
+					<legend>Location</legend>
+
+					<!-- GEO JSON LOCATION CODE -->
+					<div class  = 'map-example'>
+						<div class = 'row'>
+							<div class = 'col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+								<div id="map-holder" class = box></div>
+							</div>
+							<div class ="col-xs-12 col-sm-6 col-md-6 col-lg-6 col-border" id = 'rhs'>
+								<!-- Maybe unneccessary -->
+								<div class = "row row-relative">
+									<div class = "col-xs-12 col-sm-8 col-md-8 col-lg-8">
+										<div class = 'pac-card' id = 'inputcard'>
+											<div id = 'addressInput'>
+												<label for="userInput">Address</label>
+												<br>
+												<input type="textbox" id="userInput" placeholder = 'Enter a location' class = form-control>
+												<label for="userInput">Radius in miles</label><br>
+												<input type= 'number' id= 'target_radius_in_miles' placeholder = 'Enter your target radius' class = form-control>
+												<br>
+											</div>
+											<button type="button" class="button-animate right" style="width: 100%" onclick="" id = 'sbutton'><span>Go </span></button>
+										</div>
+									</div>
+									<div class = "col-xs-12 col-sm-4 col-md-4 col-lg-4 col-border">
+											<div class = "col-border-padding">
+												<label for="countryselector">Select an entire area</label>
+												<select id="countryselector" placeholder= "Select a country">
+													<option value="none"></option>
+													<option value="UK">United Kingdom</option>
+													<option value="NI">Northern Ireland</option>
+													<option value="SC">Scotland</option>
+													<option value="EN">England</option>
+													<option value="WA">Wales</option>
+												</select>
+											</div>
+									</div>
+								</div>
+								<div id="addressboxes"></div>
+							</div>
+							<div id="output_comps" class = cardblock type = text></div>
+							<div class="popup" id = 'popup'  onclick="popUp()"><img src="public/Image%20Components/Info%20icon.jpg" alt="Trulli" width="20" height="20">
+								<span class="popuptext" id="myPopup">In order to use this map please note the following:
+									<ul>
+										<li>You can navigate around the map by using your cursor</li>
+										<li>If you search for an address and radius, and click the go button, a marker will be added to the map in that location</li>
+										<li>You can drag and drop markers to alter the address to another location</li>
+										<li>If you double click a marker, this will remove it permanently</li>
+									</ul>
+								</span>
+							</div>
+							<div class = 'box counterbox' id = 'locationCounter'></div>
+						</div>
+						<input type="hidden" id = 'mapsoutput'>
+						<input type="hidden" id = 'locationdone'>
+					</div>
+					<script src="public/JS/googleMaps.js" async defer></script>
+				</fieldset>
+
+				<fieldset>
+					<legend>Niche</legend>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label>Choose the most relevant influencer for you: <span class="required">*</span></label>
+						</div>
+						<div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+							<select id="nicheChoices" name="Niche" onchange="addOption()" multiple>
+								<option value="Null" selected="true" disabled> Select To Add...</option>
+								<optgroup label="Arts & Entertainment">
+									<option value="Celebrities & Entertainment"> Celebrities & Entertainment </option>
+									<option value="Comics & Animation"> Comics & Animation </option>
+									<option value="Humor"> Humour </option>
+									<option value="Movies"> Movies </option>
+									<option value="Music & Audio"> Music & Audio </option>
+									<option value="Video Games"> Video Games </option>
+								</optgroup>
+
+								<optgroup label="Automotives & Transportation">
+									<option value="Boats & Watercraft"> Boats & Watercraft </option>
+									<option value="Cars"> Cars </option>
+									<option value="Classical Vehicles"> Classical Vehicles </option>
+									<option value="Motorcycles"> Motorcycles </option>
+								</optgroup>
+
+								<optgroup label="Business & Industrial">
+									<option value="Advertising & Marketing"> Advertising & Marketing </option>
+									<option value="Business News"> Business News </option>
+									<option value="Business Services"> Business Services </option>
+									<option value="Finance"> Finance </option>
+								</optgroup>
+
+								<optgroup label="Computer & Technology">
+									<option value="Computer Hardware"> Computer Hardware </option>
+									<option value="Computer Electronics"> Computer Electronics </option>
+									<option value="Emerging Technology"> Emerging Technology </option>
+									<option value="Programming"> Programming </option>
+									<option value="News"> News </option>
+								</optgroup>
+
+								<optgroup label="Education & Employment">
+									<option value="Colleges & Universities"> Colleges & Universities </option>
+									<option value="Employment"> Employment </option>
+									<option value="Primary & Secondary School"> Primary & Secondary School </option>
+								</optgroup>
+
+								<optgroup label="Food & Cuisines">
+									<option value="American"> American </option>
+									<option value="Caribbean"> Caribbean </option>
+									<option value="Chinese"> Chinese </option>
+									<option value="French"> French </option>
+									<option value="Greek"> Greek </option>
+									<option value="Indian"> Indian </option>
+									<option value="Italian"> Italian </option>
+									<option value="Japanese"> Japanese </option>
+									<option value="Mediteranian"> Mediteranian  </option>
+									<option value="Mexican"> Mexican </option>
+									<option value="Morrocan"> Morrocan </option>
+									<option value="Spanish"> Spanish </option>
+									<option value="Thai"> Thai </option>
+									<option value="Turkish"> Turkish </option>
+									<option value="Vietnamnese"> Vietnamnese </option>
+								</optgroup>
+
+								<optgroup label="Food & Cuisines">
+									<option value="Beer"> Beer </option>
+									<option value="Cider"> Cider </option>
+									<option value="Cocktalis"> Cocktalis </option>
+									<option value="Coffee"> Coffee </option>
+									<option value="Energy Drinks"> Energy Drinks </option>
+									<option value="Hard Liquor"> Hard Liquor </option>
+									<option value="Juices"> Juices </option>
+									<option value="Milkshakes/Smoothies"> Milkshakes/Smoothies </option>
+									<option value="Mocktails"> Mocktails </option>
+									<option value="Tea"> Tea </option>
+									<option value="Wine"> Wine </option>
+								</optgroup>
+
+								<optgroup label="Leisure & Hobbies">
+									<option value="Books"> Books </option>
+									<option value="Crafts"> Crafts</option>
+									<option value="Games & Puzzles"> Games & Puzzles </option>
+									<option value="Outdoor Activities"> Outdoor Activities </option>
+								</optgroup>
+
+								<optgroup label="News">
+									<option value="Politics"> Politics </option>
+									<option value="Global News"> Global News </option>
+									<option value="Spreading Awareness"> Spreading Awareness </option>
+								</optgroup>
+
+								<optgroup label="Science">
+									<option value="Biology"> Biology </option>
+									<option value="Chemisty"> Chemistry </option>
+									<option value="Math"> Math</option>
+									<option value="Physics"> Physics </option>
+								</optgroup>
+
+								<optgroup label="Shopping">
+									<option value="Apparel / Fashion"> Apparel / Fashion</option>
+									<option value="Jewellery"> Jewellery </option>
+									<option value="Lifestyle"> Lifestyle </option>
+									<option value="Toys"> Toys </option>
+								</optgroup>
+
+								<optgroup label="Sports">
+									<option value="Archery"> Archery </option>
+									<option value="Badminton"> Badminton </option>
+									<option value="Basketball"> Basketball </option>
+									<option value="Baseball"> Baseball </option>
+									<option value="Board Sports"> Board Sports </option>
+									<option value="Cheerleading & Dancing"> Cheerleading & Dancing</option>
+									<option value="Climibing Related Sports"> Climibing Related Sports </option>
+									<option value="Cricket"> Cricket </option>
+									<option value="Cycling"> Cycling </option>
+									<option value="Extreme Air Sports"> Extreme Air Sports </option>
+									<option value="Fishing"> Fishing </option>
+									<option value="Football"> Football </option>
+									<option value="Frisbee"> Frisbee </option>
+									<option value="Golf"> Golf </option>
+									<option value="Gymnastics"> Gymnastics </option>
+									<option value="Handball"> Handball </option>
+									<option value="Hockey"> Hockey </option>
+									<option value="Hunting"> Hunting </option>
+									<option value="Horse Racing & Related Sports"> Horse Racing & Related Sports </option>
+									<option value="Ice Sports"> Ice Sports </option>
+									<option value="Kite Sports"> Kite Sports </option>
+									<option value="Lacrosse"> Lacrosse </option>
+									<option value="Martial Arts"> Martial Arts </option>
+									<option value="Pool & Other Related Sports"> Pool & Other Related Sports </option>
+									<option value="Rowing"> Rowing </option>
+									<option value="Running"> Running </option>
+									<option value="Rugby"> Rugby </option>
+									<option value="Sailing"> Sailing </option>
+									<option value="Shooting Sports"> Shooting Sports </option>
+									<option value="Snow Sports"> Snow Sports </option>
+									<option value="Swimming"> Swimming </option>
+									<option value="Tennis"> Tennis </option>
+									<option value="Weightlifting"> Weightlifting </option>
+								</optgroup>
+
+								<optgroup label="Travel">
+									<option value="Hotel"> Hotel</option>
+									<option value="Tourist Destinations"> Tourist Destinations </option>
+									<option value="Beach Locations"> Beach Locations </option>
+									<option value="Mountains"> Mountains </option>
+								</optgroup>
+
+								<optgroup label="Politics">
+									<option value="Left-Wing"> Left-Wing </option>
+									<option value="Center"> Center </option>
+									<option value="Right-Wing"> Right-Wing </option>
+								</optgroup>
+
+							</select>
+							<select id="nicheChosen" name="NicheChosen" onchange='removeOption()' multiple>
+								<option value="Null" disabled> Select To Remove...</option>
+							</select>
+						</div>
+						<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" id="info">
+							<p> Every influencer appeals to different interests and niches. </p>
+						</div>
+					</div>
+				</fieldset>
+
+				<fieldset>
+					<legend>Age</legend>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label>Select the age of influencers you want: (Select Multiple) <span class="required">*</span></label>
+							<div class="checkbox">
+								<label><input class="age" type="checkbox" value="18-29">18 - 29</label>
+							</div>
+							<div class="checkbox">
+								<label><input class="age" type="checkbox" value="29-39">29 - 39</label>
+							</div>
+							<div class="checkbox">
+								<label><input class="age" type="checkbox" value="40-59">40 - 59</label>
+							</div>
+							<div class="checkbox">
+								<label><input class="age" type="checkbox" value="60+">60 +</label>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+
+				<fieldset>
+					<legend>Gender</legend>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label>Please select the gender of the influencers you wish to target: <span class="required">*</span></label>
+							<div class="checkbox">
+								<label><input id="mCheck" class="gender" type="checkbox" value="Male" onclick="turnOffAll()">Male</label>
+							</div>
+							<div class="checkbox">
+								<label><input id="fCheck" class="gender" type="checkbox" value="Female" onclick="turnOffAll()">Female</label>
+							</div>
+							<div class="checkbox">
+								<label><input id="oCheck" class="gender" type="checkbox" value="Other" onclick="turnOffAll()">Other</label>
+							</div>
+							<div class="checkbox">
+								<label><input id="aCheck" class="gender" type="checkbox" value="All" onclick="turnOffOptions()">All</label>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+
+				<div class="row inline col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<button id="s2next" type="button" class="button-animate right" style="vertical-align:middle" onclick="submitStep2()"><span>Next </span></button>
+					<button id="s2prev" type="button" class="button-animate left" style="vertical-align:middle" onclick="returnStep1()"><span>Previous </span></button>
+				</div>
+			</div>
+
+			<div id="s3Content">
+
+				<fieldset>
+					<legend>Do's and Don'ts </legend>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label>Give the influencers some guidance on the post or leave them with a blank canvas, the choice is yours...</label>
+						</div>
+					</div>
+					<div class="row">
+						<form class="form-inline">
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+								<div class="form-group do">
+									<input id="do1" type="text" class="form-control" maxlength="200" placeholder="Do">
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+								<div class="form-group dont">
+									<input id="dont1" type="text" class="form-control" maxlength="200" placeholder="Don't">
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="row">
+						<form class="form-inline">
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+								<div class="form-group do">
+									<input id="do2" type="text" class="form-control" maxlength="200" placeholder="Do">
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+								<div class="form-group dont">
+									<input id="dont2" type="text" class="form-control" maxlength="200" placeholder="Don't">
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="row">
+						<form class="form-inline">
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+								<div class="form-group do">
+									<input id="do3" type="text" class="form-control" maxlength="200" placeholder="Do">
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+								<div class="form-group dont">
+									<input id="dont3" type="text" class="form-control" maxlength="200" placeholder="Don't">
+								</div>
+							</div>
+						</form>
+					</div>
+
+				</fieldset>
+
+				<fieldset>
+					<legend>Ad Copy</legend>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label for="adReq">Give the influencers some mandatory Ad Copy or a guideline</label>
+							<input type="text" class="form-control" id="adReq">
+						</div>
+					</div>
+				</fieldset>
+
+				<fieldset>
+					<legend>Submit Link</legend>
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<label for="weblink">Share a link of your site so that influencers can direct traffic</label>
+							<input type="text" class="form-control" id="weblink">
+						</div>
+					</div>
+				</fieldset>
+
+				<div class="full-width" id="wrapper">
+					<div id="first-file" class="incumbent upload">
+						<label for="file-upload" class="custom-file-upload">
+							<i class="fas fa-plus"></i>
+						</label>
+						<input id="file-upload" type="file"/>
+						<label class="uploadCaption" for="file-upload">
+							Add a picture to represent your campaign to influencers
+						</label>
+					</div>
+					<div class="incumbent moods">
+						<div class="incumbent upload mood">
+							<label for="file-upload" class="custom-file-upload">
+								<i class="fas fa-plus"></i>
+							</label>
+							<input id="file-upload" type="file"/>
+							<label class="uploadCaption" for="file-upload">
+								Add up to two optional pictures as a mood board of guidance for influencers <br>
+							</label>
+						</div>
+						<div class="incumbent upload mood">
+							<label id="third-file" for="file-upload" class="custom-file-upload">
+								<i class="fas fa-plus"></i>
+							</label>
+							<input id="file-upload" type="file"/>
+							<br>
+						</div>
+					</div>
+				</div>
+				<div class="row inline col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<button id="s3next" type="button" class="button-animate right" style="vertical-align:middle" onclick="submitStep3()"><span>Advance to Payment</span></button>
+					<button id="s3prev" type="button" class="button-animate left" style="vertical-align:middle" onclick="returnStep2()"><span>Previous </span></button>
+				</div>
+			</div>
+		</div>
+	</body>
+	</html>
